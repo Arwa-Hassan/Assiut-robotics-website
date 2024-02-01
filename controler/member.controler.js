@@ -5,6 +5,8 @@ const mongoose=require('mongoose');
 mongoose.connect(MONGOURL)
 const member = require('../mongoose.models/member');
 
+// jwt
+const jwt=require('../jwt/jwt');
 
 const createAccount=async(req,res)=>{
 try {
@@ -28,7 +30,8 @@ try {
     })
 
     await newMember.save();
-    res.status(200).send({"message":"Your account has been successfully created."})
+    const token =await jwt.generateToken({email})
+    res.status(201).send({"message":"Your account has been successfully created.",token})
 } catch (error) {
     // console.log(error);
     res.status(400).send({"message":error.message});
@@ -37,6 +40,18 @@ try {
 }
 
 
+const login=async(req,res)=>{
+    try {
+        const {email,password}=req.body;
+
+        const oldMember=await member.find({email});
+    } catch (error) {
+        
+    }
+}
+
+
 module.exports={
     createAccount,
+    login
 }
